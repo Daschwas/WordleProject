@@ -23,14 +23,14 @@ def get_guess():
         else:
             guess = guess.lower()
             return guess
-def attempt_tracker():
-    if count == 5:
-        print("Game over!")
-        return
-    else:
-        count = count+1
-        print("Guess number: " + count)
-        return count
+#def attempt_tracker():
+   # if count == 5:
+     #   print("Game over!")
+     #   return
+   # else:
+      #  count = count+1
+      #  print("Guess number: " + count)
+     #   return count
 
 def wordle_clone():
     target_word = pick_word()
