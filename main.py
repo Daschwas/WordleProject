@@ -1,4 +1,6 @@
 import random
+Valid_Words_File = "all_words.txt"
+valid_words = open(Valid_Words_File).read().split()
 
 def pick_word():
 """
@@ -41,7 +43,7 @@ Enter a five letter word: sails
 #word is then accepted
 """
     word_limit = 5
-    valid_words = open("all_words.txt").read().split()
+    
     while True:
         guess = input("Enter a five letter word: ")
         if len(guess) != word_limit:
@@ -114,8 +116,8 @@ Process finished with exit code 0
             print(count)
             return
         else:
-            clues_guess = [ch for ch in guess]
-            clues_target = [ch for ch in target_word]
+            clues_guess = list(guess)
+            clues_target = list(target_word)
             for letter in clues_guess:
                 if letter in clues_target:
                     guess_index = clues_guess.index(letter)
