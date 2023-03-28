@@ -1,3 +1,5 @@
+import random
+
 def pick_word():
 """
 This function imports and splits the word list in order to randomly pick a word to be guessed each game.
@@ -7,8 +9,8 @@ Returns: target_word (random word taken from the text file)
 
 Example: target_word = "Refer"
 """
-    words = open("target_words.txt").read().split()
-    import random
+    Target_Words_File = "target_words.txt" 
+    words = open(Target_Words_File).read().split()
     target_word = random.choice(words)
     return target_word
 
@@ -38,10 +40,11 @@ Your guess is not a valid word.
 Enter a five letter word: sails
 #word is then accepted
 """
+    wordd_limit = 5
     valid_words = open("all_words.txt").read().split()
     while True:
         guess = input("Enter a five letter word: ")
-        if len(guess) != 5:
+        if len(guess) != word_limit:
             print("Your guess is not five letters.")
             continue
         elif guess not in valid_words:
@@ -98,6 +101,9 @@ Process finished with exit code 0
     instruction()
     limit = 6
     count = 1
+    Green_Letter = "G"
+    Red_Letter = "R"
+    Yellow_Letter = "Y"
     #count = attempt_tracker()
     while count < limit:
         guess = get_guess()
@@ -108,24 +114,24 @@ Process finished with exit code 0
             print(count)
             return
         else:
-            cluesguess = [ch for ch in guess]
-            cluestarget = [ch for ch in target_word]
-            for letter in cluesguess:
-                if letter in cluestarget:
-                    guess_index = cluesguess.index(letter)
-                    target_index = cluestarget.index(letter)
+            clues_guess = [ch for ch in guess]
+            clues_target = [ch for ch in target_word]
+            for letter in clues_guess:
+                if letter in clues_target:
+                    guess_index = clues_guess.index(letter)
+                    target_index = clues_target.index(letter)
                     if guess_index == target_index:
-                        guess_list.append("G")
+                        guess_list.append(Green_Letter)
                     else:
-                        guess_list.append("Y")
+                        guess_list.append(Yellow_Letter)
                 else:
-                    guess_list.append("R")
+                    guess_list.append(Red_Letter)
             print(guess_list)
             print(cluesguess)
             print(cluestarget)
             count = count+1
             continue
-    while count >=limit:
+    if count >=limit:
         print("Game over!")
         print("The target word was " + target_word)
         return
