@@ -40,7 +40,7 @@ Your guess is not a valid word.
 Enter a five letter word: sails
 #word is then accepted
 """
-    wordd_limit = 5
+    word_limit = 5
     valid_words = open("all_words.txt").read().split()
     while True:
         guess = input("Enter a five letter word: ")
@@ -127,8 +127,8 @@ Process finished with exit code 0
                 else:
                     guess_list.append(Red_Letter)
             print(guess_list)
-            print(cluesguess)
-            print(cluestarget)
+            print(clues_guess)
+            print(clues_target)
             count = count+1
             continue
     if count >=limit:
