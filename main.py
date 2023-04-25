@@ -108,6 +108,10 @@ Process finished with exit code 0
     Yellow_Letter = "Y"
     #count = attempt_tracker()
     while count < limit:
+        for letter in target_word:
+            letter_frequency[letter] = 0
+        for letter in target_word:
+            letter_frequency[letter] += 1
         guess = get_guess()
         guess_list = list()
         if guess == target_word:
@@ -118,14 +122,17 @@ Process finished with exit code 0
         else:
             clues_guess = list(guess)
             clues_target = list(target_word)
-            for letter in clues_guess:
-                if letter in clues_target:
-                    guess_index = clues_guess.index(letter)
-                    target_index = clues_target.index(letter)
-                    if guess_index == target_index:
+            for index, letter in enumerate(clues_guess):
+                if letter not in clues_target:
+                    guess_list.append(Red_Letter)
+                else:
+                    #target_index = clues_target.index(letter)
+                    if clues_guess[index] == clues_target[index]:
                         guess_list.append(Green_Letter)
-                    else:
+                        letter_frequency[letter] -= 1
+                    elif (letter in clues_target) and (letter_frequency[letter] > 0):
                         guess_list.append(Yellow_Letter)
+                    else: guess_list.append(Red_Letter)
                 else:
                     guess_list.append(Red_Letter)
             print(guess_list)
@@ -139,5 +146,5 @@ Process finished with exit code 0
         return
 
 wordle_clone()
-#to do: remove the word being revealed after each guess (have currently put this in place to more easily debug
+#to do: remove the word being revealed after each guess (have currently put this in place to more easily debug)
 #to do: adjust function so it captures correct amount/position when dealing with words containing multiple of the same letter
