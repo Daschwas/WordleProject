@@ -123,18 +123,16 @@ Process finished with exit code 0
             clues_guess = list(guess)
             clues_target = list(target_word)
             for index, letter in enumerate(clues_guess):
-                if letter not in clues_target:
-                    guess_list.append(Red_Letter)
-                else:
-                    #target_index = clues_target.index(letter)
+                if letter in clues_target:
                     if clues_guess[index] == clues_target[index]:
-                        guess_list.append(Green_Letter)
+                        clues_guess[index] = "*"
                         letter_frequency[letter] -= 1
-                    elif (letter in clues_target) and (letter_frequency[letter] > 0):
-                        guess_list.append(Yellow_Letter)
-                    else: guess_list.append(Red_Letter)
-                else:
-                    guess_list.append(Red_Letter)
+            for index, letter in enumerate(clues_guess):
+                if letter == "*":
+                    guess_list.append(Green_Letter)
+                elif (letter in clues_target) and (letter_frequency[letter] > 0):
+                    guess_list.append(Yellow_Letter)
+                else: guess_list.append(Red_Letter)
             print(guess_list)
             print(clues_guess)
             print(clues_target)
@@ -147,4 +145,4 @@ Process finished with exit code 0
 
 wordle_clone()
 #to do: remove the word being revealed after each guess (have currently put this in place to more easily debug)
-#to do: adjust function so it captures correct amount/position when dealing with words containing multiple of the same letter
+#to do: add docuscript to new functions
