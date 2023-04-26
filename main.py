@@ -76,7 +76,7 @@ Returns: None
 
 Example:
 Enter a five letter word: sails
-['G', 'Y', 'R', 'R', 'G']
+['G', 'Y', 'R', 'R', 'R']
 ['s', 'a', 'i', 'l', 's']
 ['s', 'p', 'e', 'a', 'r']
 Enter a five letter word: pears
@@ -112,6 +112,8 @@ Process finished with exit code 0
             letter_frequency[letter] = 0
         for letter in target_word:
             letter_frequency[letter] += 1
+            """ The above counts how many times a letter appears in the target word, with 0 resetting it for each guess.
+            This will be used later in the code"""
         guess = get_guess()
         guess_list = list()
         if guess == target_word:
@@ -127,15 +129,23 @@ Process finished with exit code 0
                     if clues_guess[index] == clues_target[index]:
                         clues_guess[index] = "*"
                         letter_frequency[letter] -= 1
+                       """
+This first for loop is so that all the correct letters in the correct positions can be captured first before determining whether the other letters are correct or not
+"""
             for index, letter in enumerate(clues_guess):
                 if letter == "*":
                     guess_list.append(Green_Letter)
                 elif (letter in clues_target) and (letter_frequency[letter] > 0):
                     guess_list.append(Yellow_Letter)
                 else: guess_list.append(Red_Letter)
+"""
+The second loop then checks each of the other letters and gives "G" to all the letters marked in the previous loop.
+Due to the letter frequency counter decreasing with each instance of a letter, as well as the correct position letters already being removed from the word,
+the correct amount of letters is reflected whenever the user guesses.
+"""
             print(guess_list)
-            print(clues_guess)
-            print(clues_target)
+            #print(clues_guess)
+            #print(clues_target)
             count = count+1
             continue
     if count >=limit:
@@ -144,5 +154,3 @@ Process finished with exit code 0
         return
 
 wordle_clone()
-#to do: remove the word being revealed after each guess (have currently put this in place to more easily debug)
-#to do: add docuscript to new functions
