@@ -108,7 +108,7 @@ Guesses:
 Process finished with exit code 0
 
 """
-   
+    while True:   
         target_word = pick_word()
         instruction()
         limit = 6
