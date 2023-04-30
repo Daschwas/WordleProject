@@ -63,7 +63,16 @@ Enter a five letter word: sails
       #  count = count+1
       #  print("Guess number: " + count)
      #   return count
-
+def replay():
+    response = input("Would you like to play again? (Y/N)")
+    response = response.upper()
+    if response == "Y":
+        print("Let's begin!\n")
+    else:
+        print("Thanks for playing!")
+        exit()
+"This allows the user to indicate whether they wish to play again, rather than needing to run the program each time"
+    
 def wordle_clone():
 """
 This function compiles the other functions to create the Wordle clone.
@@ -99,58 +108,60 @@ Guesses:
 Process finished with exit code 0
 
 """
-    target_word = pick_word()
-    instruction()
-    limit = 6
-    count = 1
-    Green_Letter = "G"
-    Red_Letter = "R"
-    Yellow_Letter = "Y"
-    #count = attempt_tracker()
-    while count < limit:
-        for letter in target_word:
-            letter_frequency[letter] = 0
-        for letter in target_word:
-            letter_frequency[letter] += 1
+   
+        target_word = pick_word()
+        instruction()
+        limit = 6
+        count = 1
+        Green_Letter = "G"
+        Red_Letter = "R"
+        Yellow_Letter = "Y"
+        #count = attempt_tracker()
+        while count < limit:
+            for letter in target_word:
+                letter_frequency[letter] = 0
+            for letter in target_word:
+                letter_frequency[letter] += 1
             """ The above counts how many times a letter appears in the target word, with 0 resetting it for each guess.
             This will be used later in the code"""
-        guess = get_guess()
-        guess_list = list()
-        if guess == target_word:
-            print("You win!")
-            print("Guesses:")
-            print(count)
-            return
-        else:
-            clues_guess = list(guess)
-            clues_target = list(target_word)
-            for index, letter in enumerate(clues_guess):
-                if letter in clues_target:
-                    if clues_guess[index] == clues_target[index]:
-                        clues_guess[index] = "*"
-                        letter_frequency[letter] -= 1
+            guess = get_guess()
+            guess_list = list()
+            if guess == target_word:
+                print("You win!")
+                print("Guesses:")
+                print(count)
+                replay()
+                break
+            else:
+                clues_guess = list(guess)
+                clues_target = list(target_word)
+                for index, letter in enumerate(clues_guess):
+                    if letter in clues_target:
+                        if clues_guess[index] == clues_target[index]:
+                            clues_guess[index] = "*"
+                            letter_frequency[letter] -= 1
                        """
 This first for loop is so that all the correct letters in the correct positions can be captured first before determining whether the other letters are correct or not
 """
-            for index, letter in enumerate(clues_guess):
-                if letter == "*":
-                    guess_list.append(Green_Letter)
-                elif (letter in clues_target) and (letter_frequency[letter] > 0):
-                    guess_list.append(Yellow_Letter)
-                else: guess_list.append(Red_Letter)
+                for index, letter in enumerate(clues_guess):
+                    if letter == "*":
+                        guess_list.append(Green_Letter)
+                    elif (letter in clues_target) and (letter_frequency[letter] > 0):
+                        guess_list.append(Yellow_Letter)
+                    else: guess_list.append(Red_Letter)
 """
 The second loop then checks each of the other letters and gives "G" to all the letters marked in the previous loop.
 Due to the letter frequency counter decreasing with each instance of a letter, as well as the correct position letters already being removed from the word,
 the correct amount of letters is reflected whenever the user guesses.
 """
-            print(guess_list)
+                print(guess_list)
             #print(clues_guess)
             #print(clues_target)
-            count = count+1
-            continue
-    if count >=limit:
-        print("Game over!")
-        print("The target word was " + target_word)
-        return
+                count = count+1
+                continue
+        if count >=limit:
+            print("Game over!")
+            print("The target word was " + target_word)
+            replay()
 
 wordle_clone()
