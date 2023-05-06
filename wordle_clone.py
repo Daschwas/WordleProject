@@ -173,13 +173,12 @@ def wordle_clone():
                 """
                 print(" ".join(guess_list))
                 print(" ".join(print_guess))
-                print(clues_target)
                 count = count + 1
                 print("You have " + str(limit - count) + " guesses left!")
                 continue
         if count >= limit:
             print("Game over!")
-            print("The target word was " + target_word)
+            print("The target word was " + target_word + ".")
             track_history(target_word, count)
             replay(total_count, matches)
 
