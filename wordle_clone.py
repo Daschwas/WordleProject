@@ -69,17 +69,26 @@ def replay(total_count, matches):
         print("Let's begin!\n")
     else:
         average = float(total_count/matches)
-        print("Average guesses: " + str(average) + " guesses across " + str(matches) + " games.")
+        print("Average guesses: " + str(average) + " guesses across " + str(matches) + " won games.")
         print("Thanks for playing!")
         exit()
 
 
-def track_history(target_word, count):
+def history_won(target_word, count):
     """As per the client's request, this function keeps a record of all played games, by writing the secret word
     and the guesses needed to identify it in a separate text file.
     """
     word_document = open("secret_word_history.txt", "a+")
-    word_document.write("\n" + '"' + str(target_word) + '" ' + "took " + str(count) + " tries!")
+    word_document.write("\n" + '"' + str(target_word) + '" ' + "took " + str(count) + " guesses!")
+    word_document.close()
+
+
+def history_loss(target_word):
+    """As per the client's request, this function keeps a record of all played games, by writing the secret word
+    and the fact that the user failed to guess it in a separate text file.
+    """
+    word_document = open("secret_word_history.txt", "a+")
+    word_document.write("\n" + 'Failed to guess "' + str(target_word) + '"!')
     word_document.close()
 
 
@@ -133,7 +142,7 @@ def wordle_clone():
                 print("You win!")
                 print("Guesses:")
                 print(count)
-                track_history(target_word, count)
+                history_won(target_word, count)
                 matches = matches+1
                 total_count = total_count+count
                 replay(total_count, matches)
@@ -179,7 +188,7 @@ def wordle_clone():
         if count >= limit:
             print("Game over!")
             print("The target word was " + target_word + ".")
-            track_history(target_word, count)
+            history_loss(target_word)
             replay(total_count, matches)
 
 
