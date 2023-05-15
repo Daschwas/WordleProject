@@ -1,9 +1,11 @@
 import random
 
-Valid_Words_File = "all_words.txt"
-valid_words = open(Valid_Words_File).read().split()
+valid_words_file = "all_words.txt"
+with open(valid_words_file) as text:
+    valid_words = text.read().split()
 target_words_file = "target_words.txt"
-words = open(target_words_file).read().split()
+with open(target_words_file) as guess_text:
+    words = guess_text.read().split()
 
 
 def pick_word():
@@ -61,16 +63,20 @@ def get_guess():
 
 def replay(total_count, matches):
     """This allows the user to choose to play again, rather than needing to run the program each time
-    Additionally, it works out the average amount of guesses from all successful games
+    Additionally, it works out the average amount of guesses from all successful games as per the
+    updated customer brief
     """
     response = input("Would you like to play again? (Y/N)")
     response = response.upper()
     if response == "Y":
         print("Let's begin!\n")
     else:
-        average = float(total_count/matches)
-        print("Average guesses: " + str(average) + " guesses across " + str(matches) + " won games.")
-        print("Thanks for playing!")
+        if matches > 0:
+            average = float(total_count/matches)
+            print("Average guesses: " + str(average) + " guesses across " + str(matches) + " won games.")
+            print("Thanks for playing!")
+        else:
+            print("No games won today!")
         exit()
 
 
@@ -95,9 +101,10 @@ def history_loss(target_word):
 def wordle_clone():
     """This function compiles the other functions to create the Wordle clone.
     In other words, the function prompts for guesses whilst keep track of the current amount of guesses and
-    providing feedback via coded letters ("G", "Y", "R"). It checks whether the letters are in the current position by
+    providing feedback via coded symbols ("+", "?", "-"). It checks whether the letters are in the current position by
     splitting the word into individual letters and comparing indexes. If the user either guesses the word, or hits the
-    guess limit, the game will end and the target word (and overall score) will be revealed.
+    guess limit, the game will end and the target word (and overall score) will be revealed. Two loops are implemented
+    with the first ensuring all correct letters in the correct position can be captured before other "types" of letters.
 
     Parameters:     None
     Returns: None
@@ -155,17 +162,11 @@ def wordle_clone():
                     letter_frequency[letter] = 0
                 for letter in target_word:
                     letter_frequency[letter] += 1
-                    """The above counts how many times a letter appears in the target word, with 0 resetting it for
-                    each guess. This will be used later in the code.
-                    """
                 for index, letter in enumerate(clues_guess):
                     if letter in clues_target:
                         if clues_guess[index] == clues_target[index]:
                             clues_guess[index] = "*"
                             letter_frequency[letter] -= 1
-                            """This first for loop is so that all the correct letters in the correct positions can be
-                            captured first before determining whether the other letters are correct or not
-                            """
                 for index, letter in enumerate(clues_guess):
                     if letter == "*":
                         guess_list.append(correct_position)
@@ -174,16 +175,13 @@ def wordle_clone():
                         letter_frequency[letter] -= 1
                     else:
                         guess_list.append(incorrect_letter)
-
-                """The second loop then checks each of the other letters and gives "G" to all the letters marked in
-                the previous loop. Due to the letter frequency counter decreasing with each instance of a letter,
-                as well as the correct position letters already being removed from the word,
-                the correct amount of letters is reflected whenever the user guesses.
-                """
                 print(" ".join(guess_list))
                 print(" ".join(print_guess))
                 count = count + 1
-                print("You have " + str(limit - count) + " guesses left!")
+                if (limit - count) > 1:
+                    print("You have " + str(limit - count) + " guesses left!")
+                elif (limit - count) == 1:
+                    print("You have 1 guess left!")
                 continue
         if count >= limit:
             print("Game over!")
