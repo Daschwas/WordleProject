@@ -194,3 +194,5 @@ def wordle_clone():
             replay(total_count, matches, flag)
         if flag is True:
             break
+            
+wordle_clone()
