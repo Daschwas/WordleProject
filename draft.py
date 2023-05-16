@@ -61,7 +61,7 @@ def get_guess():
             return guess
 
 
-def replay(total_count, matches, flag):
+def replay(total_count, matches):
     """This allows the user to choose to play again, rather than needing to run the program each time
     Additionally, it works out the average amount of guesses from all successful games as per the updated customer
     requirements.
@@ -70,9 +70,7 @@ def replay(total_count, matches, flag):
     response = response.upper()
     if response == "Y":
         print("Let's begin!\n")
-        flag = True
-        return flag
-
+        return response
     else:
         if matches > 0:
             average = float(total_count/matches)
@@ -81,6 +79,7 @@ def replay(total_count, matches, flag):
 
         else:
             print("No games won today!")
+
 
 
 def history_won(target_word, count):
@@ -134,9 +133,7 @@ def wordle_clone():
     """
     total_count = 0
     matches = 0
-    flag = True
-    while flag is True:
-        flag = False
+    while True:
         target_word = pick_word()
         instruction()
         limit = 6
@@ -144,7 +141,9 @@ def wordle_clone():
         correct_position = "+"
         incorrect_letter = "-"
         correct_letter = "?"
+        failsafe = "fail"
         letter_frequency = {}
+        response = "N"
 
         while count < limit:
             guess = get_guess()
@@ -156,8 +155,11 @@ def wordle_clone():
                 print(count)
                 history_won(target_word, count)
                 matches = matches+1
+                failsafe = "safe"
                 total_count = total_count+count
-                replay(total_count, matches, flag)
+                count = (limit + 1)
+                replay(total_count, matches)
+                continue
             else:
                 clues_guess = list(guess)
                 print_guess = list(guess)
@@ -187,12 +189,18 @@ def wordle_clone():
                 elif (limit - count) == 1:
                     print("You have 1 guess left!")
                 continue
-        if count >= limit:
+        if count >= limit and failsafe == "fail":
             print("Game over!")
             print("The target word was " + target_word + ".")
             history_loss(target_word)
-            replay(total_count, matches, flag)
-        if flag is True:
-            break
-            
+            replay(total_count, matches)
+            if response == "Y":
+                break
+            else:
+                return False
+        while True:
+            if response == "Y":
+                break
+
+
 wordle_clone()
