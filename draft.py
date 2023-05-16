@@ -70,7 +70,7 @@ def replay(total_count, matches):
     response = response.upper()
     if response == "Y":
         print("Let's begin!\n")
-        return response
+        return True
     else:
         if matches > 0:
             average = float(total_count/matches)
@@ -79,7 +79,7 @@ def replay(total_count, matches):
 
         else:
             print("No games won today!")
-
+        return False
 
 
 def history_won(target_word, count):
@@ -133,7 +133,8 @@ def wordle_clone():
     """
     total_count = 0
     matches = 0
-    while True:
+    flag = True
+    while flag:
         target_word = pick_word()
         instruction()
         limit = 6
@@ -143,7 +144,6 @@ def wordle_clone():
         correct_letter = "?"
         failsafe = "fail"
         letter_frequency = {}
-        response = "N"
 
         while count < limit:
             guess = get_guess()
@@ -158,7 +158,7 @@ def wordle_clone():
                 failsafe = "safe"
                 total_count = total_count+count
                 count = (limit + 1)
-                replay(total_count, matches)
+                flag = replay(total_count, matches)
                 continue
             else:
                 clues_guess = list(guess)
@@ -193,14 +193,7 @@ def wordle_clone():
             print("Game over!")
             print("The target word was " + target_word + ".")
             history_loss(target_word)
-            replay(total_count, matches)
-            if response == "Y":
-                break
-            else:
-                return False
-        while True:
-            if response == "Y":
-                break
+            flag = replay(total_count, matches)
 
 
 wordle_clone()
