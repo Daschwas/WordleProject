@@ -63,21 +63,24 @@ def get_guess():
 
 def replay(total_count, matches):
     """This allows the user to choose to play again, rather than needing to run the program each time
-    Additionally, it works out the average amount of guesses from all successful games as per the
-    updated customer brief
+    Additionally, it works out the average amount of guesses from all successful games as per the updated customer
+    requirements.
     """
     response = input("Would you like to play again? (Y/N)")
     response = response.upper()
     if response == "Y":
         print("Let's begin!\n")
+        return True
     else:
-        if matches > 0:
+        if matches > 1:
             average = float(total_count/matches)
-            print("Average guesses: " + str(average) + " guesses across " + str(matches) + " won games.")
+            print("Today's average guesses: " + str(average) + " guesses across " + str(matches) + " won games.")
             print("Thanks for playing!")
+        elif matches == 1:
+            pass
         else:
             print("No games won today!")
-        exit()
+        return False
 
 
 def history_won(target_word, count):
@@ -97,7 +100,41 @@ def history_loss(target_word):
     word_document.write("\n" + 'Failed to guess "' + str(target_word) + '"!')
     word_document.close()
 
-
+    
+def average_guesses():
+    """As per the client's request, this function tracks the stats (average guesses, lost games, win percentage) from
+    all games played (not just that session, in contrast to the history_won and history_loss function) and presents
+    these statistics to the player
+    """
+    word_document = open("secret_word_history.txt", "r")
+    lines = word_document.readlines()
+    total_guesses = 0
+    won_games = 0
+    lost_games = 0
+    average_total = 0
+    for line in lines:
+        if "took" in line:
+            guesses = int(line.split()[-2])
+            total_guesses += guesses
+            won_games += 1
+        if "Failed" in line:
+            lost_games += 1
+    word_document.close()
+    if won_games > 0:
+        win_percent = (won_games / (won_games + lost_games)) * 100
+        average_total = (total_guesses / won_games)
+    else:
+        win_percent = 0
+    if won_games > 1:
+        print("From " + str(won_games) + " total won games, you guess the word in " + str(average_total) +
+              " tries on average.")
+    if lost_games == 1:
+        print("You have lost one game.")
+    else:
+        print("You have lost a total of " + str(lost_games) + " games.")
+    print("You have a win percentage of " + str(win_percent) + "%.")
+    
+    
 def wordle_clone():
     """This function compiles the other functions to create the Wordle clone.
     In other words, the function prompts for guesses whilst keep track of the current amount of guesses and
@@ -131,7 +168,8 @@ def wordle_clone():
     """
     total_count = 0
     matches = 0
-    while True:
+    flag = True
+    while flag:
         target_word = pick_word()
         instruction()
         limit = 6
@@ -139,6 +177,7 @@ def wordle_clone():
         correct_position = "+"
         incorrect_letter = "-"
         correct_letter = "?"
+        failsafe = "fail"
         letter_frequency = {}
 
         while count < limit:
@@ -151,9 +190,12 @@ def wordle_clone():
                 print(count)
                 history_won(target_word, count)
                 matches = matches+1
+                failsafe = "safe"
                 total_count = total_count+count
-                replay(total_count, matches)
-                break
+                count = (limit + 1)
+                flag = replay(total_count, matches)
+                average_guesses()
+                continue
             else:
                 clues_guess = list(guess)
                 print_guess = list(guess)
@@ -183,11 +225,12 @@ def wordle_clone():
                 elif (limit - count) == 1:
                     print("You have 1 guess left!")
                 continue
-        if count >= limit:
+        if count >= limit and failsafe == "fail":
             print("Game over!")
             print("The target word was " + target_word + ".")
             history_loss(target_word)
-            replay(total_count, matches)
+            flag = replay(total_count, matches)
+            average_guesses()
 
-
+            
 wordle_clone()
